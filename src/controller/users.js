@@ -7,7 +7,7 @@ const ModelUsers = require("../model/users");
 const Port = process.env.PORT;
 const Host = process.env.HOST;
 const cloudinary = require("../config/cloudinary");
-
+const { generateAccessToken } = require("../helpers/jwt");
 const userController = {
   insert: async (req, res) => {
     let {
@@ -65,34 +65,51 @@ const userController = {
     }
   },
   login: async (req, res) => {
-    let {
-      rows: [users],
-    } = await ModelUsers.checkEmail(req.body.email);
-    if (!users) {
-      return response(res, 404, false, null, " email not found");
+    try {
+      const email = req.body.email;
+      let {
+        rows: [users],
+      } = await ModelUsers.checkEmail(email);
+      if (!users) {
+        return response(res, 404, false, null, " email not found");
+      }
+      if (users.verif == 0) {
+        return response(res, 404, false, null, " email not verified");
+      }
+      const password = req.body.password;
+      const validation = bcrypt.compareSync(password, users.password);
+      const id_users = users.id_users;
+      if (!validation) {
+        return response(res, 404, false, null, "wrong password");
+      }
+      // const data = {
+      //   email,
+      //   token: await generateAccessToken(email, id_users),
+      // };
+      // res.cookie("token", data.token, {
+      //   secure: true,
+      //   maxAge: 120000,
+      //   httpOnly: true,
+      // });
+      // return response(res, 200, true, data, "LOGIN SUCCESS");
+      //////////////////////////////////////////
+      delete users.password;
+      delete users.otp;
+      delete users.auth;
+      let payload = {
+        email: users.email,
+        id: users.id_users,
+      };
+      users.token = generateToken(payload);
+      res.cookie("jwt", users.token, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 3600000,
+      });
+      response(res, 200, false, [], "LOGIN SUCCESS");
+    } catch (err) {
+      return response(res, 404, false, err, "input data fail");
     }
-    if (users.verif == 0) {
-      return response(res, 404, false, null, " email not verified");
-    }
-    const password = req.body.password;
-    const validation = bcrypt.compareSync(password, users.password);
-    if (!validation) {
-      return response(res, 404, false, null, "wrong password");
-    }
-    delete users.password;
-    delete users.otp;
-    delete users.auth;
-    let payload = {
-      email: users.email,
-      id: users.id_users,
-    };
-    users.token = generateToken(payload);
-    res.cookie("jwt", users.token, {
-      httpOnly: true,
-      secure: false,
-      maxAge: 3600000,
-    });
-    response(res, 200, false, [], "LOGIN SUCCESS");
   },
   getDetailUsers: (req, res) => {
     ModelUsers.detailUser(req.params.id)

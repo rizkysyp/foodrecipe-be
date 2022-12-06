@@ -101,14 +101,14 @@ const userController = {
         id: users.id_users,
       };
       users.token = generateToken(payload);
-      res.cookie("jwt", users.token, {
+      res.cookie("user", users.token, {
         httpOnly: true,
         secure: false,
         maxAge: 3600000,
       });
-      response(res, 200, false, [], "LOGIN SUCCESS");
+      response(res, 200, true, null, "LOGIN SUCCESS");
     } catch (err) {
-      return response(res, 404, false, err, "input data fail");
+      return response(res, 404, false, err, "LOGIN FAILED");
     }
   },
   getDetailUsers: (req, res) => {

@@ -81,6 +81,27 @@ const recipesController = {
       response(res, 404, false, error, "SAVING RECIPES FAILED");
     }
   },
+  sort: async (req, res, next) => {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const offset = (page - 1) * limit;
+      const sortby = req.query.sortby || "recipes_name";
+      const sort = req.query.sort || "ASC";
+      const search = req.query.search || "";
+      const result = await ModelRecipes.sort({
+        limit,
+        offset,
+        sort,
+        sortby,
+        search,
+      });
+      response(res, 200, true, result.rows, "get data success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "get data fail");
+    }
+  },
 };
 
 exports.recipesController = recipesController;

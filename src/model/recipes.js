@@ -135,6 +135,14 @@ const getBookmark = (id) => {
     );
   });
 };
+const sort = ({ limit, offset, sort, sortby, search }) => {
+  console.log(limit, offset, sort, sortby);
+  return Pool.query(
+    `SELECT recipes.id_recipes, recipes.recipes_name, recipes.photo from recipes WHERE (recipes.recipes_name) ILIKE ('%${search}%') 
+    ORDER BY recipes.${sortby} ${sort} LIMIT ${limit} OFFSET ${offset} `
+  );
+};
+
 module.exports = {
   addRecipes,
   updateRecipes,
@@ -144,4 +152,5 @@ module.exports = {
   addComents,
   getComents,
   saveRecipes,
+  sort,
 };

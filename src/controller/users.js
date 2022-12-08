@@ -14,13 +14,7 @@ const userController = {
       rows: [users],
     } = await ModelUsers.checkEmail(req.body.email);
     if (users) {
-      return response(
-        res,
-        404,
-        false,
-        "EMAIL ALREADY REGISTERED",
-        "REGISTER FAILED"
-      );
+      return response(res, 403, false, [], "REGISTER FAILED");
     }
     /// CREATING KODE VERIFIKASI
     let digits = "0123456789";
@@ -106,7 +100,7 @@ const userController = {
         secure: false,
         maxAge: 3600000,
       });
-      response(res, 200, true, null, "LOGIN SUCCESS");
+      response(res, 200, true, users, "LOGIN SUCCESS");
     } catch (err) {
       return response(res, 404, false, err, "LOGIN FAILED");
     }

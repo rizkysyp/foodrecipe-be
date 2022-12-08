@@ -7,11 +7,13 @@ const recipesController = {
   insert: async (req, res) => {
     try {
       const { id_users } = "879a0ec0-ba39-4966-b5d1-45f1fed62a80";
+      const {
+        photo: [photo],
+        video: [video],
+      } = req.files;
 
-      const image = await cloudinary.uploader.upload(req.file.path, {
-        folder: "toko",
-      });
-      req.body.photo = image.url;
+      req.body.photo = photo.path;
+      req.body.video = video.path;
       console.log(id_users);
       await ModelRecipes.addRecipes(req.body, id_users);
       return response(res, 200, true, req.body, "INPUT RECIPES SUCCESS");

@@ -1,9 +1,10 @@
 const Pool = require("../config/db");
 
-const addRecipes = ({ recipes_name, photo, video, description, id_users }) => {
+const addRecipes = ({ name, photo, video, description }, id_users) => {
+  console.log(id_users, "id model");
   return new Promise((resolve, reject) => {
     Pool.query(
-      `INSERT INTO recipes(recipes_name,photo,video,description,id_users) VALUES ('${recipes_name}','${photo}','${video}','${description}','879a0ec0-ba39-4966-b5d1-45f1fed62a80')`,
+      `INSERT INTO recipes(recipes_name,photo,video,description,id_users) VALUES ('${name}','${photo}','${video}','${description}','${id_users}')`,
       (err, result) => {
         if (!err) {
           resolve(result);
@@ -15,10 +16,10 @@ const addRecipes = ({ recipes_name, photo, video, description, id_users }) => {
   });
 };
 
-const updateRecipes = (id, { recipes_name, photo, video, description }) => {
+const updateRecipes = (id, { name, photo, video, description }) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `UPDATE recipes SET recipes_name='${recipes_name}',photo='${photo}',video='${video}',description='${description}' WHERE id_recipes='${id}'`,
+      `UPDATE recipes SET recipes_name='${name}',photo='${photo}',video='${video}',description='${description}' WHERE id_recipes='${id}'`,
       (err, result) => {
         if (!err) {
           resolve(result);

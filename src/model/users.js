@@ -33,8 +33,7 @@ const detailUser = (id) => {
     `SELECT users.name, users.photo,users.phonenumber FROM users WHERE id_users='${id}' `
   );
 };
-const updatePhoto = (id, data) => {
-  const { photo } = data;
+const updatePhoto = (id, { photo }) => {
   return Pool.query(`UPDATE users SET photo='${photo}' WHERE id_users='${id}'`);
 };
 module.exports = {

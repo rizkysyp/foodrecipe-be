@@ -2,11 +2,15 @@ require("dotenv").config();
 const ModelRecipes = require("./../model/recipes");
 const { response } = require("./../helpers/common");
 const cloudinary = require("../config/cloudinary");
+const jwt = require("jsonwebtoken");
 
 const recipesController = {
   insert: async (req, res) => {
     try {
-      const { id_users } = "879a0ec0-ba39-4966-b5d1-45f1fed62a80";
+      // const { id_users } = "a3bc1e68-3d93-459b-8748-56b9e63e228a";
+      // const token = req.cookies;
+      const id_users = req.payload.id;
+      console.log(id_users, "ini id coy");
       const {
         photo: [photo],
         video: [video],
@@ -14,7 +18,7 @@ const recipesController = {
 
       req.body.photo = photo.path;
       req.body.video = video.path;
-      console.log(id_users);
+
       await ModelRecipes.addRecipes(req.body, id_users);
       return response(res, 200, true, req.body, "INPUT RECIPES SUCCESS");
     } catch (err) {
@@ -48,20 +52,18 @@ const recipesController = {
       const comments = await ModelRecipes.getComents(req.params.id);
       const recipes = await ModelRecipes.detailRecipes(req.params.id);
 
-      response(
-        res,
-        200,
-        true,
-        [recipes.rows, comments.rows],
-        "GET RECIPES DATA SUCCESS"
-      );
+      response(res, 200, true, recipes.rows, "GET RECIPES DATA SUCCESS");
+      // response(res, 200, true, comments.rows, "GET RECIPES DATA SUCCESS");
     } catch (error) {
       response(res, 404, false, error, "GET DATA FAILED");
     }
   },
   recipeUSer: async (req, res) => {
     try {
-      const result = await ModelRecipes.recipeUsers(req.params.id);
+      const id = req.payload.id;
+      console.log(id, "ini id coy");
+      console.log(id, "ini id");
+      const result = await ModelRecipes.recipeUsers(id);
       response(res, 200, true, result.rows, "INPUT DATA SUKSES");
     } catch (error) {
       response(res, 404, false, error, "GET DATA FAILED");

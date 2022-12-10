@@ -7,7 +7,8 @@ const ModelUsers = require("../model/users");
 const Port = process.env.PORT;
 const Host = process.env.HOST;
 const cloudinary = require("../config/cloudinary");
-const { generateAccessToken } = require("../helpers/jwt");
+const upload = require("../middlewares/upload");
+
 const userController = {
   insert: async (req, res) => {
     let {
@@ -106,24 +107,23 @@ const userController = {
     }
   },
   getDetailUsers: (req, res) => {
-    ModelUsers.detailUser(req.params.id)
+    const user = req.payload.id;
+    ModelUsers.detailUser(user)
       .then((result) =>
         response(res, 200, true, result.rows, "get data success")
       )
       .catch((err) => response(res, 404, false, err, "get data fail"));
   },
   updatePhoto: async (req, res) => {
-    // let auth = req.headers.authorization;
-    // let token = auth.split(" ")[1];
-    // let decode = jwt.verify(token, key);
-    // const id_user = decode.id;
+    const id_users = req.payload.id;
+    console.log(id_users, "ini id coy");
+    const {
+      photo: [photo],
+    } = req.files;
 
-    const image = await cloudinary.uploader.upload(req.file.path, {
-      folder: "food",
-    });
-    // getting url for db
-    req.body.photo = image.url;
-    ModelUsers.updatePhoto(req.params.id, req.body)
+    req.body.photo = photo.path;
+
+    ModelUsers.updatePhoto(id_users, req.body)
       .then((result) =>
         response(res, 200, false, result, "Update Foto Berhasil")
       )

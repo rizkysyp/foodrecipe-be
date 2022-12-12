@@ -25,13 +25,15 @@ const recipesController = {
       return response(res, 404, false, err, "input data fail");
     }
   },
-  update: async (req, res, next) => {
+  update: async (req, res) => {
     try {
-      const image = await cloudinary.uploader.upload(req.file.path, {
-        folder: "toko",
-      });
-      // getting url for db
-      req.body.photo = image.url;
+      const {
+        photo: [photo],
+        video: [video],
+      } = req.files;
+
+      req.body.photo = photo.path;
+      req.body.video = video.path;
 
       await ModelRecipes.updateRecipes(req.params.id, req.body);
       return response(res, 200, true, req.body, "UPDATE RECIPES SUCCESS");
@@ -58,6 +60,7 @@ const recipesController = {
       response(res, 404, false, error, "GET DATA FAILED");
     }
   },
+
   recipeUSer: async (req, res) => {
     try {
       const id = req.payload.id;

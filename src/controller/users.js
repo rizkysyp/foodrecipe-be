@@ -6,8 +6,8 @@ const email = require("../middlewares/email");
 const ModelUsers = require("../model/users");
 const Port = process.env.PORT;
 const Host = process.env.HOST;
-const cloudinary = require("../config/cloudinary");
-const upload = require("../middlewares/upload");
+// const cloudinary = require("../config/cloudinary");
+// const upload = require("../middlewares/upload");
 
 const userController = {
   insert: async (req, res) => {
@@ -68,8 +68,8 @@ const userController = {
       if (!users) {
         return response(res, 404, false, null, " email not found");
       }
-      if (users.verif == 0) {
-        return response(res, 404, false, null, " email not verified");
+      if (users.auth == 0) {
+        return response(res, 404, false, null, "email not verified");
       }
       const password = req.body.password;
       const validation = bcrypt.compareSync(password, users.password);
@@ -128,6 +128,21 @@ const userController = {
         response(res, 200, false, result, "Update Foto Berhasil")
       )
       .catch((err) => response(res, 400, false, err, "Update Foto Gagal"));
+  },
+  auth: async (req, res, next) => {
+    console.log("email", req.body.email);
+    console.log("password", req.body.otp);
+    let {
+      rows: [users],
+    } = await ModelUsers.findEmail(req.body.email);
+    if (!users) {
+      return response(res, 404, false, null, "email not found");
+    }
+    if (users.token == req.body.otp) {
+      const result = await ModelUsers.verification(req.body.email);
+      return response(res, 200, true, result, "verification email success");
+    }
+    return response(res, 404, false, null, "wrong otp please check your email");
   },
 };
 

@@ -9,5 +9,8 @@ const generateToken = (payload) => {
   const token = jwt.sign(payload, key, verifyOpts);
   return token;
 };
-
-module.exports = { generateToken };
+const verify = async (token) => {
+  const result = await jwt.verify(token, process.env.JWT_KEY);
+  return result;
+};
+module.exports = { generateToken, verify };

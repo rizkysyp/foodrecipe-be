@@ -36,9 +36,37 @@ const detailUser = (id) => {
 const updatePhoto = (id, { photo }) => {
   return Pool.query(`UPDATE users SET photo='${photo}' WHERE id_users='${id}'`);
 };
+
+const verification = (email) => {
+  return new Promise((resolve, reject) =>
+    Pool.query(
+      `UPDATE users SET auth=1 WHERE "email"='${email}'`,
+      (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(err);
+        }
+      }
+    )
+  );
+};
+const findEmail = (email) => {
+  return new Promise((resolve, reject) =>
+    Pool.query(`SELECT * FROM users where email='${email}'`, (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(err);
+      }
+    })
+  );
+};
 module.exports = {
   createUsers,
   checkEmail,
   updatePhoto,
   detailUser,
+  verification,
+  findEmail,
 };

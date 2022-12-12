@@ -8,7 +8,7 @@ const { user } = require("../middlewares/user");
 router.post("/", upload, user, recipesController.insert);
 router.post("/comments", recipesController.addComents);
 router.post("/save", recipesController.addBookmark);
-router.put("/update/:id", upload2.single("photo"), recipesController.update);
+router.put("/update/:id", upload, recipesController.update);
 router.delete("/delete/:id", recipesController.delete);
 router.get("/detail/:id", recipesController.detail);
 router.get("/user-recipes/", user, recipesController.recipeUSer);

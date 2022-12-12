@@ -75,7 +75,6 @@ const recipeUsers = (id) => {
     );
   });
 };
-
 const addComents = ({ id_users, id_recipes, comments }) => {
   return new Promise((resolve, reject) => {
     Pool.query(

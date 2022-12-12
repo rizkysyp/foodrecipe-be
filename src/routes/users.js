@@ -9,4 +9,5 @@ router.post("/register", userController.insert);
 router.post("/login", userController.login);
 router.put("/", user, upload, userController.updatePhoto);
 router.get("/", user, userController.getDetailUsers);
+router.post("/verif", userController.auth);
 module.exports = router;

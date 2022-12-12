@@ -1,4 +1,4 @@
-const { verify } = require("../helpers/jwt");
+const { verify } = require("../helpers/auth");
 const response = require("../helpers/common");
 const createError = require("http-errors");
 

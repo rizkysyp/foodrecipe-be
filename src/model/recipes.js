@@ -90,10 +90,10 @@ const addComents = ({ id_users, id_recipes, comments }) => {
   });
 };
 
-const saveRecipes = ({ id_users, id_recipes }) => {
+const saveRecipes = ({ id_resep }, id_users) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `INSERT INTO bookmarks(id_users,id_recipes) VALUES ('${id_users}','${id_recipes}')`,
+      `INSERT INTO bookmarks(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
       (err, result) => {
         if (!err) {
           resolve(result);

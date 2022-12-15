@@ -82,7 +82,9 @@ const recipesController = {
   },
   addBookmark: async (req, res) => {
     try {
-      const result = await ModelRecipes.saveRecipes(req.body);
+      const id_users = req.payload.id;
+      const result = await ModelRecipes.saveRecipes(req.body, id_users);
+
       response(res, 200, true, [], "RECIPES SAVED");
     } catch (error) {
       response(res, 404, false, error, "SAVING RECIPES FAILED");

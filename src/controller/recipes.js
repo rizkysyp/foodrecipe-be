@@ -51,7 +51,6 @@ const recipesController = {
   },
   detail: async (req, res) => {
     try {
-      const comments = await ModelRecipes.getComents(req.params.id);
       const recipes = await ModelRecipes.detailRecipes(req.params.id);
 
       response(res, 200, true, recipes.rows, "GET RECIPES DATA SUCCESS");
@@ -80,6 +79,14 @@ const recipesController = {
       response(res, 404, false, error, "INPUT COMMENT FAILED");
     }
   },
+  addComents: async (req, res) => {
+    try {
+      const result = await ModelRecipes.addComents(req.body);
+      response(res, 200, true, [], "INPUT COMMENT SUCCESS");
+    } catch (error) {
+      response(res, 404, false, error, "INPUT COMMENT FAILED");
+    }
+  },
   addBookmark: async (req, res) => {
     try {
       const id_users = req.payload.id;
@@ -90,10 +97,43 @@ const recipesController = {
       response(res, 404, false, error, "SAVING RECIPES FAILED");
     }
   },
+  addLike: async (req, res) => {
+    try {
+      const id_users = req.payload.id;
+      const result = await ModelRecipes.saveRecipes(req.body, id_users);
+
+      response(res, 200, true, result.rows, "RECIPES SAVED");
+    } catch (error) {
+      response(res, 404, false, error, "SAVING RECIPES FAILED");
+    }
+  },
   getBookmark: async (req, res) => {
     try {
       const id_users = req.payload.id;
+
       const result = await ModelRecipes.getBookmark(id_users);
+
+      response(res, 200, true, result.rows, "RECIPES SAVED");
+    } catch (error) {
+      response(res, 404, false, error, "SAVING RECIPES FAILED");
+    }
+  },
+
+  getLiked: async (req, res) => {
+    try {
+      const id_users = req.payload.id;
+
+      const result = await ModelRecipes.getLiked(id_users);
+
+      response(res, 200, true, result.rows, "RECIPES LIKED");
+    } catch (error) {
+      response(res, 404, false, error, "ERROR WHEN LIKED RECIPES");
+    }
+  },
+
+  getComment: async (req, res) => {
+    try {
+      const result = await ModelRecipes.getComents(req.params.id);
 
       response(res, 200, true, result.rows, "RECIPES SAVED");
     } catch (error) {

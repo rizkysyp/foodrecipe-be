@@ -93,7 +93,22 @@ const addComents = ({ id_users, id_recipes, comments }) => {
 const saveRecipes = ({ id_resep }, id_users) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `INSERT INTO bookmarks(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
+      `INSERT INTO liked(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
+      (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(err);
+        }
+      }
+    );
+  });
+};
+
+const likeRecipes = ({ id_resep }, id_users) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(
+      `INSERT INTO liked(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
       (err, result) => {
         if (!err) {
           resolve(result);
@@ -121,9 +136,10 @@ const getComents = (id) => {
 };
 
 const getBookmark = (id_users) => {
+  console.log(id_users);
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT recipes.recipes_name, recipes.photo from bookmarks,recipes WHERE bookmarks.id_users='${id_users}' AND bookmarks.id_recipes=recipes.id_recipes
+      `SELECT recipes.recipes_name, recipes.photo ,recipes.id_recipes from bookmarks,recipes WHERE bookmarks.id_users='${id_users}' AND bookmarks.id_recipes=recipes.id_recipes
       `,
       (err, result) => {
         if (!err) {
@@ -135,6 +151,24 @@ const getBookmark = (id_users) => {
     );
   });
 };
+
+const getLiked = (id_users) => {
+  console.log(id_users);
+  return new Promise((resolve, reject) => {
+    Pool.query(
+      `SELECT recipes.recipes_name, recipes.photo ,recipes.id_recipes from liked,recipes WHERE liked.id_users='${id_users}' AND liked.id_recipes=recipes.id_recipes
+      `,
+      (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(err);
+        }
+      }
+    );
+  });
+};
+
 const sort = ({ limit, offset, sort, sortby, search }) => {
   console.log(limit, offset, sort, sortby);
   return Pool.query(
@@ -154,4 +188,6 @@ module.exports = {
   saveRecipes,
   sort,
   getBookmark,
+  likeRecipes,
+  getLiked,
 };

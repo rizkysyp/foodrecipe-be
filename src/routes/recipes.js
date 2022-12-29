@@ -13,4 +13,5 @@ router.delete("/delete/:id", recipesController.delete);
 router.get("/detail/:id", recipesController.detail);
 router.get("/user-recipes/", user, recipesController.recipeUSer);
 router.get("/search", recipesController.sort);
+router.get("/bookmark", user, recipesController.getBookmark);
 module.exports = router;

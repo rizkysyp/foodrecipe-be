@@ -120,10 +120,10 @@ const getComents = (id) => {
   });
 };
 
-const getBookmark = (id) => {
+const getBookmark = (id_users) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT recipes.recipes_name, recipes.photo from bookmarks,recipes WHERE bookmarks.id_users='${id}' AND bookmarks.id_recipes=recipes.id_recipes;
+      `SELECT recipes.recipes_name, recipes.photo from bookmarks,recipes WHERE bookmarks.id_users='${id_users}' AND bookmarks.id_recipes=recipes.id_recipes
       `,
       (err, result) => {
         if (!err) {
@@ -153,4 +153,5 @@ module.exports = {
   getComents,
   saveRecipes,
   sort,
+  getBookmark,
 };

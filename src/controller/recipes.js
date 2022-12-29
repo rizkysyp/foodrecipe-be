@@ -69,7 +69,7 @@ const recipesController = {
       const result = await ModelRecipes.recipeUsers(id);
       response(res, 200, true, result.rows, "INPUT DATA SUKSES");
     } catch (error) {
-      response(res, 404, false, error, "GET DATA FAILED");
+      response(res, 404, false, error, [], "GET DATA FAILED");
     }
   },
   addComents: async (req, res) => {
@@ -86,6 +86,16 @@ const recipesController = {
       const result = await ModelRecipes.saveRecipes(req.body, id_users);
 
       response(res, 200, true, [], "RECIPES SAVED");
+    } catch (error) {
+      response(res, 404, false, error, "SAVING RECIPES FAILED");
+    }
+  },
+  getBookmark: async (req, res) => {
+    try {
+      const id_users = req.payload.id;
+      const result = await ModelRecipes.getBookmark(id_users);
+
+      response(res, 200, true, result.rows, "RECIPES SAVED");
     } catch (error) {
       response(res, 404, false, error, "SAVING RECIPES FAILED");
     }

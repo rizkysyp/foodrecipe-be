@@ -6,7 +6,7 @@ const upload = require("../middlewares/upload-video");
 const { user } = require("../middlewares/user");
 
 router.post("/", upload, user, recipesController.insert);
-router.post("/comments", recipesController.addComents);
+router.post("/comments/:id", user, recipesController.addComents);
 router.post("/save/", user, recipesController.addBookmark);
 router.put("/update/:id", upload, recipesController.update);
 router.delete("/delete/:id", recipesController.delete);
@@ -14,7 +14,9 @@ router.get("/detail/:id", recipesController.detail);
 router.get("/user-recipes/", user, recipesController.recipeUSer);
 router.get("/search", recipesController.sort);
 router.get("/save", user, recipesController.getBookmark);
+router.delete("/save/:id", recipesController.deleteBookmark);
 router.get("/comments/:id", recipesController.getComment);
 router.post("/liked", user, recipesController.addLike);
 router.get("/liked", user, recipesController.getLiked);
+router.delete("/liked/:id", recipesController.deleteLike);
 module.exports = router;

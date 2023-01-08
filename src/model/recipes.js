@@ -75,7 +75,8 @@ const recipeUsers = (id) => {
     );
   });
 };
-const addComents = ({ id_users, id_recipes, comments }) => {
+const addComents = (data) => {
+  const { id_users, id_recipes, comments } = data;
   return new Promise((resolve, reject) => {
     Pool.query(
       `INSERT INTO comments(comments,id_users,id_recipes) VALUES ('${comments}','${id_users}','${id_recipes}')`,
@@ -93,7 +94,7 @@ const addComents = ({ id_users, id_recipes, comments }) => {
 const saveRecipes = ({ id_resep }, id_users) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `INSERT INTO liked(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
+      `INSERT INTO bookmarks(id_users,id_recipes) VALUES ('${id_users}','${id_resep}')`,
       (err, result) => {
         if (!err) {
           resolve(result);
@@ -123,7 +124,7 @@ const likeRecipes = ({ id_resep }, id_users) => {
 const getComents = (id) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT users.name,comments.comments from comments, users WHERE id_recipes='${id}' AND comments.id_users=users.id_users`,
+      `SELECT comments.id,users.name,users.photo,comments.comments from comments, users WHERE id_recipes='${id}' AND comments.id_users=users.id_users`,
       (err, result) => {
         if (!err) {
           resolve(result);
@@ -139,7 +140,7 @@ const getBookmark = (id_users) => {
   console.log(id_users);
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT recipes.recipes_name, recipes.photo ,recipes.id_recipes from bookmarks,recipes WHERE bookmarks.id_users='${id_users}' AND bookmarks.id_recipes=recipes.id_recipes
+      `SELECT bookmarks.id,recipes.recipes_name, recipes.photo ,recipes.id_recipes from bookmarks,recipes WHERE bookmarks.id_users='${id_users}' AND bookmarks.id_recipes=recipes.id_recipes
       `,
       (err, result) => {
         if (!err) {
@@ -156,7 +157,7 @@ const getLiked = (id_users) => {
   console.log(id_users);
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT recipes.recipes_name, recipes.photo ,recipes.id_recipes from liked,recipes WHERE liked.id_users='${id_users}' AND liked.id_recipes=recipes.id_recipes
+      `SELECT liked.id,recipes.recipes_name, recipes.photo ,recipes.id_recipes from liked,recipes WHERE liked.id_users='${id_users}' AND liked.id_recipes=recipes.id_recipes
       `,
       (err, result) => {
         if (!err) {
@@ -177,6 +178,30 @@ const sort = ({ limit, offset, sort, sortby, search }) => {
   );
 };
 
+const deleteBookmark = (id) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(`DELETE FROM bookmarks WHERE id='${id}'`, (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(err);
+      }
+    });
+  });
+};
+
+const deleteLike = (id) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(`DELETE FROM liked WHERE id='${id}'`, (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(err);
+      }
+    });
+  });
+};
+
 module.exports = {
   addRecipes,
   updateRecipes,
@@ -190,4 +215,6 @@ module.exports = {
   getBookmark,
   likeRecipes,
   getLiked,
+  deleteBookmark,
+  deleteLike,
 };

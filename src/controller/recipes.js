@@ -73,24 +73,24 @@ const recipesController = {
   },
   addComents: async (req, res) => {
     try {
-      const result = await ModelRecipes.addComents(req.body);
-      response(res, 200, true, [], "INPUT COMMENT SUCCESS");
+      const id_users = req.payload.id;
+      const id_recipes = req.params.id;
+      const data = {
+        id_users,
+        id_recipes,
+        comments: req.body.comments,
+      };
+      await ModelRecipes.addComents(data);
+      response(res, 200, true, data, "INPUT COMMENT SUCCESS");
     } catch (error) {
       response(res, 404, false, error, "INPUT COMMENT FAILED");
     }
   },
-  addComents: async (req, res) => {
-    try {
-      const result = await ModelRecipes.addComents(req.body);
-      response(res, 200, true, [], "INPUT COMMENT SUCCESS");
-    } catch (error) {
-      response(res, 404, false, error, "INPUT COMMENT FAILED");
-    }
-  },
+
   addBookmark: async (req, res) => {
     try {
       const id_users = req.payload.id;
-      const result = await ModelRecipes.saveRecipes(req.body, id_users);
+      await ModelRecipes.saveRecipes(req.body, id_users);
 
       response(res, 200, true, [], "RECIPES SAVED");
     } catch (error) {
@@ -100,9 +100,19 @@ const recipesController = {
   addLike: async (req, res) => {
     try {
       const id_users = req.payload.id;
-      const result = await ModelRecipes.saveRecipes(req.body, id_users);
+      const result = await ModelRecipes.likeRecipes(req.body, id_users);
 
-      response(res, 200, true, result.rows, "RECIPES SAVED");
+      response(res, 200, true, [], "RECIPES LIKED");
+    } catch (error) {
+      response(res, 404, false, error, "SAVING RECIPES FAILED");
+    }
+  },
+  addComment: async (req, res) => {
+    try {
+      const id_users = req.payload.id;
+      const result = await ModelRecipes.likeRecipes(req.body, id_users);
+
+      response(res, 200, true, [], "RECIPES LIKED");
     } catch (error) {
       response(res, 404, false, error, "SAVING RECIPES FAILED");
     }
@@ -159,6 +169,22 @@ const recipesController = {
     } catch (err) {
       console.log(err);
       response(res, 404, false, err, "get data fail");
+    }
+  },
+  deleteBookmark: async (req, res) => {
+    try {
+      await ModelRecipes.deleteBookmark(req.params.id);
+      response(res, 200, true, [], "delete data success");
+    } catch (err) {
+      response(res, 404, false, err, "delete data faill");
+    }
+  },
+  deleteLike: async (req, res) => {
+    try {
+      await ModelRecipes.deleteLike(req.params.id);
+      response(res, 200, true, [], "delete data success");
+    } catch (err) {
+      response(res, 404, false, err, "delete data faill");
     }
   },
 };

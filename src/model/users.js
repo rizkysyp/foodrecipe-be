@@ -4,7 +4,8 @@ const createUsers = (data) => {
   const { id_users, email, username, password, phonenumber, token } = data;
   return new Promise((resolve, reject) => {
     Pool.query(
-      `INSERT INTO users(id_users,email,name,password,phonenumber,auth,token) VALUES ('${id_users}','${email}','${username}','${password}','${phonenumber}',0,'${token}')`,
+      `INSERT INTO users(id_users,email,name,password,phonenumber,auth,token,photo) VALUES ('${id_users}','${email}','${username}','${password}','${phonenumber}',0,'${token}',
+      '')`,
       (err, result) => {
         if (!err) {
           resolve(result);

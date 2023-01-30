@@ -3,7 +3,7 @@
 
   <h3 align="center">Mama Recipe Rest API</h3>
   <p align="center">
-    <image align="center" width="200" src='./images/mamareciperest.jpg' />
+    <image align="center" width="200" src='./logo.png' />
   </p>
 
   <p align="center">
